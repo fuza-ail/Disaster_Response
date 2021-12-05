@@ -43,6 +43,22 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    top_10_cat_counts = df.loc[:,'related':].sum().sort_values(ascending=False)[:10].values
+    top_10_cat_names = df.loc[:,'related':].sum().sort_values(ascending=False)[:10].index
+    
+    cat_group = df.groupby('genre').sum().T.loc['related':,:]
+    
+    data_cat = []
+    
+    for index,item in cat_group.iterrows():
+        data = {
+            'x': ['direct','news','social'],
+            'y': [item[0],item[1],item[2]],
+            'name': index,
+            'type': 'bar'
+        }
+        data_cat.append(data)
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -62,6 +78,34 @@ def index():
                 'xaxis': {
                     'title': "Genre"
                 }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=top_10_cat_names,
+                    y=top_10_cat_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Top 10 Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Categories"
+                }
+            }
+        },
+        {
+            'data': data_cat,
+            'layout': {
+                'title': 'Categories by Genre',
+                'barmode': 'stack',
+                'yaxis': {
+                    'title': "Count"
+                },
             }
         }
     ]
