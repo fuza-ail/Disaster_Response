@@ -25,7 +25,7 @@ import joblib
 def load_data(database_filepath):
     conn = sqlite3.connect(database_filepath)
     engine = create_engine('sqlite:///{}'.format(database_filepath))
-    df = pd.read_sql('select * from disaster',conn)
+    df = pd.read_sql('select * from disaster_response',conn)
     
     X = df['message']
     Y = df.loc[:,'related':]
